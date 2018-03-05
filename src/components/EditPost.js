@@ -52,10 +52,10 @@ export default class EditPost extends Component {
 
     render() {
         const editActions = [
-            <FlatButton label="Cancel"  onClick={this.props.isClose} />,
+            <FlatButton label="Cancel" primary onClick={this.props.isClose} />,
             <FlatButton
                 label="Submit"
-                primary
+                secondary
                 onClick={this.onSave}
             />,
         ]
