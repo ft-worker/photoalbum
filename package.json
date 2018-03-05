@@ -1,0 +1,32 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "immutable-sort": "^0.1.0",
+    "material-ui": "^0.20.0",
+    "moment": "^2.20.1",
+    "mui-theme": "^0.1.4",
+    "npm-start-command": "^0.2.0",
+    "react": "^16.2.0",
+    "react-alphabet-sorter": "^1.0.2",
+    "react-alphabetical-sorter": "^1.0.1",
+    "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7",
+    "react-moment": "^0.7.0",
+    "react-popout-component": "^1.7.3",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.0",
+    "redux": "^3.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "redux-devtools": "^3.4.1"
+  }
+}
