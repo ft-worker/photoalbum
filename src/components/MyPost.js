@@ -13,7 +13,6 @@ export default class MyPost extends Component {
             isOpen: false,
             isDeleteOpen: false
         }
-        const a = 5;
     }
 
     isOpen = () => (
