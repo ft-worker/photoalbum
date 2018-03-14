@@ -6,7 +6,10 @@ export default class MyPost extends Component {
     render() {
         const deleteActions = [
             <FlatButton label="Cancel" onClick={this.props.isDeleteClose} />,
-            <FlatButton label="Delete" onClick={() => this.props.onDeletePost(this.props.post.id)} />
+            <FlatButton label="Delete" onClick={() => {
+                this.props.onDeletePost(this.props.post.id);
+                this.props.isDeleteClose();
+            }} />
         ];
         return (
             <Dialog

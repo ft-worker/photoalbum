@@ -1,43 +1,71 @@
 import React, { Component } from 'react';
-import Post from '../components/Post.js';
-import moment from 'moment/moment.js';
+import Post from '../components/Post';
+import { connect } from 'react-redux';
+import { addPost, editPost, deletePost } from '../actions.js'
+import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo'
+import FlatButton from 'material-ui/FlatButton';
+import EditPost from '../components/EditPost'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import moment from 'moment/moment.js';
 
-class Posts extends Component {
+const mapStateToProps = (state, ownProps) => {
+  return {
+    posts: state.Posts
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onDeletePost: id => { dispatch(deletePost(id)) },
+    onAddPost: post => {
+      fetch('http://localhost:8081/api/post', {
+        body: JSON.stringify(post),
+        method: 'POST',
+        mode: 'default',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+      dispatch(addPost(post))
+    },
+    onEditPost: post => {
+      fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
+        body: JSON.stringify(post),
+        method: 'POST',
+        mode: 'default',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+      dispatch(editPost(post))
+    }
+  }
+}
+
+export class PostsList extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.sortByDate = this.sortByDate.bind(this);
     this.SortByAlphabet = this.SortByAlphabet.bind(this);
     this.sortAlphabetically = this.sortAlphabetically.bind(this);
     this.state = {
-      posts: [
-        {
-          title: 'Hello',
-          date: '2017-09-01T12:30:48',
-          id: '1',
-          username: 'Jack',
-          imageurl: 'http://logoinspirations.com/wp-content/uploads/2017/04/1920-x-1080-6-480x240.jpg',
-          description: 'This is the first image. Lorem ipsum dolor sit amet.',
-        },
-        {
-          title: '',
-          date: '2018-01-01T08:30:10',
-          id: '2',
-          username: 'Anna',
-          imageurl: 'https://t3.ftcdn.net/jpg/01/33/92/36/240_F_133923669_az6zDEfhs2mw3Tkf3WxFjrKMnVCSyTRO.jpg',
-          description: 'This is the first image.',
-        },
-        {
-          title: 'Nature',
-          date: '2018-02-13T22:40:38',
-          id: '3',
-          username: 'Walter',
-          imageurl: 'http://ironxiron.co.uk/wp-content/uploads/2018/01/Nature-6-2-480x240.jpg',
-          description: 'This is the first image. Lorem ipsum dolor sit amet.',
-        }
-      ]
+      isOpen: false,
+      posts: this.props.posts
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ posts: nextProps.posts })
+  }
+
+  isOpen = () => (
+    this.setState({ isOpen: true })
+  )
+  isClose = () => (
+    this.setState({ isOpen: false })
+  )
 
   sortByDate(event) {
     this.setState(prevState => {
@@ -70,9 +98,31 @@ class Posts extends Component {
     return 0;
   }
 
+  isOpen = () => (
+    this.setState({ isOpen: true })
+  )
+  isClose = () => (
+    this.setState({ isOpen: false })
+  )
+
   render() {
     return (
       <div>
+        <FlatButton
+          label="Add new photo"
+          labelPosition="after"
+          containerElement="label"
+          style={{ marginTop: 5, width: 500 }}
+          icon={<AddAPhoto />}
+          onClick={this.isOpen}
+        >
+          <EditPost
+            onAddPost={this.props.onAddPost}
+            post={{ id: this.state.posts.length, title: '', description: '' }}
+            isOpen={this.state.isOpen}
+            isClose={this.isClose}
+          />
+        </FlatButton>
         <div style={{ marginTop: 10, marginLeft: 5, maxWidth: 500 }}>
           <RadioButtonGroup
             name="post"
@@ -94,16 +144,27 @@ class Posts extends Component {
         </div>
         <div style={{ clear: 'both' }}>
           {
-            this.state.posts.map(prevState => (
-              <div key={prevState.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
-                <Post post={prevState} />
+            this.state.posts.map((post, id) => (
+              <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+                <Post
+                  post={post}
+                  onDeletePost={() => this.props.onDeletePost(id)}
+                  onEditPost={this.props.onEditPost}
+                />
               </div>
             ))
           }
         </div>
       </div>
-    );
+    )
   }
+
 }
 
+const Posts = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PostsList)
+
 export default Posts;
+

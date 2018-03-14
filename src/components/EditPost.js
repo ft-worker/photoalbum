@@ -27,16 +27,22 @@ export default class EditPost extends Component {
         })
     }
 
-    urlChange(url) {
+    urlChange(imageurl) {
         this.setState(prevState => {
             const date = moment().format()
-            const post = { ...prevState.post, url, date }
+            const post = { ...prevState.post, imageurl, date }
+            return { post }
+        })
+    }
+
+    nameChange(username) {
+        this.setState(prevState => {
+            const post = { ...prevState.post, username }
             return { post }
         })
     }
 
     onSave = () => {
-        console.log(this.state.post)
         if (this.props.name === 'edit') {
             this.props.onEditPost(this.state.post);
             this.props.isClose()
@@ -68,6 +74,15 @@ export default class EditPost extends Component {
                 onRequestClose={this.props.isClose}
                 style={{ maxWidth: 500 }}
             >
+                <div>
+                    {
+                        this.props.name === 'edit' ? <div /> :
+                            <TextField
+                                hintText="Name"
+                                onChange={(event, username) => this.nameChange(username)}
+                            />
+                    }
+                </div>
                 <TextField
                     hintText="Title"
                     value={this.state.post.title}
@@ -84,7 +99,7 @@ export default class EditPost extends Component {
                         this.props.name === 'edit' ? <div /> :
                             <TextField
                                 hintText="URL"
-                                onChange={(event, url) => this.urlChange(url)}
+                                onChange={(event, imageurl) => this.urlChange(imageurl)}
                             />
                     }
                 </div>

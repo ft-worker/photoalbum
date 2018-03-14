@@ -46,7 +46,7 @@ export default class NavBar extends Component {
                         onClick={() => this.handleClickAll()}
                     />
                 </Link>
-                <Link to="/MyPosts">
+                <Link to="/my-posts">
                     <RaisedButton
                         label="My Photos"
                         backgroundColor={this.state.selectmy ? style.color1 : style.color2}
@@ -55,7 +55,7 @@ export default class NavBar extends Component {
                     />
                 </Link>
                 <Route exact path="/" component={Posts} />
-                <Route path="/MyPosts" component={MyPosts} />
+                <Route path="/my-posts" component={MyPosts} />
             </div>
         );
     }
