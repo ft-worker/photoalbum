@@ -24,8 +24,21 @@ export class MyPostsList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isOpen: false
+            isOpen: false,
+            myPosts: []
         }
+    }
+
+    componentDidMount() {
+        fetch('http://localhost:8081/api/myposts', {
+            method: 'GET',
+            mode: 'NO-CORS'
+        }).then(res => res.json())
+            .then(data => {
+                this.setState({
+                    myPosts: data
+                })
+            }).catch(err => err);
     }
 
     isOpen = () => (
@@ -48,14 +61,14 @@ export class MyPostsList extends Component {
                 >
                     <EditPost
                         onAddPost={this.props.onAddPost}
-                        post={{ id: this.props.myPosts.length, title: '', description: '' }}
+                        post={{ id: this.state.myPosts.length, title: '', description: '' }}
                         isOpen={this.state.isOpen}
                         isClose={this.isClose}
                     />
                 </FlatButton>
                 <div>
                     {
-                        this.props.myPosts.map((post, id) => (
+                        this.state.myPosts.map((post, id) => (
                             <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
                                 <MyPost
                                     post={post}

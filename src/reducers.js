@@ -1,14 +1,10 @@
+import { combineReducers } from 'redux'
 import {
     ADD_POST,
     EDIT_POST,
     DELETE_POST,
     RECEIVE_POSTS
 } from './actions'
-import { combineReducers } from 'redux'
-//import fetch from 'cross-fetch'
-
-
-
 
 function Posts(state = [], action) {
     if (action.type === RECEIVE_POSTS) {
@@ -43,6 +39,4 @@ function Posts(state = [], action) {
 
 export default combineReducers({
     Posts
-    // postsBySubreddit,
-    // selectedSubreddit
 });

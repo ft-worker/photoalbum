@@ -3,12 +3,10 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
 export default class MyPost extends Component {
-
     onDelete = () => {
         this.props.onDeletePost(this.props.post);
         this.props.isDeleteClose();
     }
-
     render() {
         const deleteActions = [
             <FlatButton label="Cancel" onClick={this.props.isDeleteClose} />,

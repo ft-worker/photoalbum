@@ -69,7 +69,7 @@ export default class EditPost extends Component {
         ]
         return (
             <Dialog
-                title={this.props.name === 'edit' ? 'Edit Photo Info': 'Add Photo'}
+                title={this.props.name === 'edit' ? 'Edit Photo Info' : 'Add Photo'}
                 actions={editActions}
                 modal={false}
                 open={this.state.isOpen}

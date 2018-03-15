@@ -14,27 +14,13 @@ export default class Post extends Component {
             isDeleteOpen: false
         }
     }
-
-    isOpen = () => (
-        this.setState({ isOpen: true })
-    )
-
-    isClose = () => (
-        this.setState({ isOpen: false })
-    )
-
-    isDeleteOpen = () => (
-        this.setState({ isDeleteOpen: true })
-    )
-
-    isDeleteClose = () => (
-        this.setState({ isDeleteOpen: false })
-    )
-
+    isOpen = () => (this.setState({ isOpen: true }))
+    isClose = () => (this.setState({ isOpen: false }))
+    isDeleteOpen = () => (this.setState({ isDeleteOpen: true }))
+    isDeleteClose = () => (this.setState({ isDeleteOpen: false }))
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts })
     }
-
     render() {
         return (
             <Card>
@@ -83,5 +69,4 @@ export default class Post extends Component {
             </Card>
         )
     }
-
 }
