@@ -19,10 +19,10 @@ export function editPost(post) {
     }
 }
 
-export function deletePost(id) {
+export function deletePost(post) {
     return {
         type: DELETE_POST,
-        id
+        post
     }
 }
 

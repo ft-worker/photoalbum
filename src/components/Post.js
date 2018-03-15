@@ -33,7 +33,7 @@ export default class Post extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts })
-      }
+    }
 
     render() {
         return (
@@ -68,7 +68,9 @@ export default class Post extends Component {
                 <CardTitle
                     style={{ maxWidth: '50%' }}
                     title={this.props.post.title}
-                    subtitle={'Uploaded: ' + moment(this.props.post.date).fromNow()}
+                    subtitle={this.props.post.updated > this.props.post.date ?
+                        'Updated ' + moment(this.props.post.updated).fromNow() :
+                        'Uploaded ' + moment(this.props.post.date).fromNow()}
                 />
                 <CardText style={{ maxWidth: 500 }} >
                     {this.props.post.description}

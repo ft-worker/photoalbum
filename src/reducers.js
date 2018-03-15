@@ -26,6 +26,7 @@ function Posts(state = [], action) {
                 return {
                     ...post,
                     title: action.post.title,
+                    updated: action.post.updated,
                     description: action.post.description,
                 }
             }
@@ -35,7 +36,7 @@ function Posts(state = [], action) {
 
     }
     if (action.type === DELETE_POST) {
-        return state.filter((post, id) => id !== action.id)
+        return state.filter((post) => post.id !== action.post.id)
     }
     return state
 }

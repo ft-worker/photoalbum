@@ -15,14 +15,16 @@ export default class EditPost extends Component {
 
     titleChange(title) {
         this.setState(prevState => {
-            const post = { ...prevState.post, title }
+            const updated = moment().format()
+            const post = { ...prevState.post, title, updated }
             return { post }
         })
     }
 
     descriptionChange(description) {
         this.setState(prevState => {
-            const post = { ...prevState.post, description }
+            const updated = moment().format()
+            const post = { ...prevState.post, description, updated }
             return { post }
         })
     }
@@ -67,7 +69,7 @@ export default class EditPost extends Component {
         ]
         return (
             <Dialog
-                title="Edit Photo Info"
+                title={this.props.name === 'edit' ? 'Edit Photo Info': 'Add Photo'}
                 actions={editActions}
                 modal={false}
                 open={this.state.isOpen}

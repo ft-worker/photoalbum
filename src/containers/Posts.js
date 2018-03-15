@@ -16,7 +16,18 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onDeletePost: id => { dispatch(deletePost(id)) },
+    onDeletePost: post => {
+      fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
+        body: JSON.stringify(post),
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+      dispatch(deletePost(post))
+    },
+
     onAddPost: post => {
       fetch('http://localhost:8081/api/post', {
         body: JSON.stringify(post),
@@ -29,6 +40,7 @@ const mapDispatchToProps = (dispatch) => {
         .then(response => response.json())
       dispatch(addPost(post))
     },
+
     onEditPost: post => {
       fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
         body: JSON.stringify(post),
@@ -144,11 +156,11 @@ export class PostsList extends Component {
         </div>
         <div style={{ clear: 'both' }}>
           {
-            this.state.posts.map((post, id) => (
+            this.state.posts.map((post) => (
               <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
                 <Post
                   post={post}
-                  onDeletePost={() => this.props.onDeletePost(id)}
+                  onDeletePost={this.props.onDeletePost}
                   onEditPost={this.props.onEditPost}
                 />
               </div>
