@@ -15,7 +15,7 @@ export default class PostActions extends Component {
 
     titleChange(title) {
         this.setState(prevState => {
-            const updated = moment().format()
+            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
             const post = { ...prevState.post, title, updated }
             return { post }
         })
@@ -23,7 +23,7 @@ export default class PostActions extends Component {
 
     descriptionChange(description) {
         this.setState(prevState => {
-            const updated = moment().format()
+            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
             const post = { ...prevState.post, description, updated }
             return { post }
         })
@@ -31,7 +31,7 @@ export default class PostActions extends Component {
 
     urlChange(imageurl) {
         this.setState(prevState => {
-            const date = moment().format()
+            const date = moment().format('YYYY-MM-DD HH:mm:ss')
             const post = { ...prevState.post, imageurl, date }
             return { post }
         })

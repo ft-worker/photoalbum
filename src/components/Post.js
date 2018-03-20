@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import FlatButton from 'material-ui/FlatButton';
+//import FlatButton from 'material-ui/FlatButton';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import TextField from 'material-ui/TextField';
 import moment from 'moment/moment.js';
 import PostActions from './PostActions'
 import DeletePost from './DeletePost'
@@ -22,7 +23,7 @@ export default class Post extends Component {
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts })
     }
-    
+
     render() {
         return (
             <Card>
@@ -34,7 +35,8 @@ export default class Post extends Component {
                 <CardMedia>
                     <img src={this.props.post.imageurl} alt="" />
                 </CardMedia>
-                <CardActions style={{ maxWidth: '50%', float: 'right', padding: 16 }}>
+                <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
+                    <RaisedButton label="Like" />
                     <RaisedButton label="Edit" onClick={() => this.isOpen()} >
                         <PostActions
                             onEditPost={this.props.onEditPost}
@@ -54,20 +56,31 @@ export default class Post extends Component {
                     </RaisedButton>
                 </CardActions>
                 <CardTitle
-                    style={{ maxWidth: '50%' }}
+                    style={{ maxWidth: '50%', padding: 8, paddingLeft: 18 }}
                     title={this.props.post.title}
                     subtitle={this.props.post.updated > this.props.post.date ?
                         'Updated ' + moment(this.props.post.updated).fromNow() :
                         'Uploaded ' + moment(this.props.post.date).fromNow()}
                 />
-                <CardText style={{ maxWidth: 500 }} >
+                <CardText style={{ padding: 8, paddingLeft: 18 }}>
+                    {'Liked By:'}
+                </CardText>
+                <CardText style={{ maxWidth: 500, padding: 8, paddingLeft: 18 }} >
                     {this.props.post.description}
                 </CardText>
-                <CardActions>
-                    <FlatButton label="Like" />
-                    <FlatButton label="Comment" />
-                </CardActions>
-                <CardText>{'Liked By:'}</CardText>
+                <TextField
+                    hintText="Add a comment"
+                    style={{ paddingLeft: 18, maxWidth: 445 }}
+                    multiLine
+                    fullWidth
+                />
+                <CardText actAsExpander style={{ maxWidth: 125, padding: 8, paddingLeft: 18 }}>
+                    Show all comments
+                </CardText>
+                <CardText expandable>
+                    <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{this.props.post.username}</div>
+                    <div style={{ maxWidth: '50%' }}> &nbsp;  What a beauty!!!</div>
+                </CardText>
             </Card>
         )
     }
