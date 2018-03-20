@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import moment from 'moment/moment.js';
-import EditPost from './EditPost'
+import PostActions from './PostActions'
 import DeletePost from './DeletePost'
 import { RaisedButton } from 'material-ui';
 
@@ -18,9 +18,11 @@ export default class Post extends Component {
     isClose = () => (this.setState({ isOpen: false }))
     isDeleteOpen = () => (this.setState({ isDeleteOpen: true }))
     isDeleteClose = () => (this.setState({ isDeleteOpen: false }))
+
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts })
     }
+    
     render() {
         return (
             <Card>
@@ -34,7 +36,7 @@ export default class Post extends Component {
                 </CardMedia>
                 <CardActions style={{ maxWidth: '50%', float: 'right', padding: 16 }}>
                     <RaisedButton label="Edit" onClick={() => this.isOpen()} >
-                        <EditPost
+                        <PostActions
                             onEditPost={this.props.onEditPost}
                             post={this.props.post}
                             isOpen={this.state.isOpen}

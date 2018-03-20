@@ -1,5 +1,3 @@
-import fetch from 'cross-fetch'
-
 export const ADD_POST = 'ADD_POST';
 export const EDIT_POST = 'EDIT_POST';
 export const DELETE_POST = 'DELETE_POST';
@@ -30,16 +28,5 @@ export function receivePosts(posts) {
     return {
         type: RECEIVE_POSTS,
         posts
-    }
-}
-
-export function fetchPosts() {
-    return function (dispatch) {
-        return fetch('http://localhost:8081/api/')
-            .then(
-                response => response.json()
-            )
-            .then(posts => dispatch(receivePosts(posts))
-            )
     }
 }

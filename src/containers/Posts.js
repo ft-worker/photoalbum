@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Post from '../components/Post';
 import { connect } from 'react-redux';
-import { addPost, editPost, deletePost } from '../actions.js'
+import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo'
 import FlatButton from 'material-ui/FlatButton';
-import EditPost from '../components/EditPost'
+import PostActions from '../components/PostActions'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import moment from 'moment/moment.js';
+import fetch from 'cross-fetch'
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -38,7 +39,7 @@ const mapDispatchToProps = (dispatch) => {
         }
       })
         .then(response => response.json())
-      dispatch(addPost(post))
+        .then(post => dispatch(addPost(post)))
     },
 
     onEditPost: post => {
@@ -52,6 +53,12 @@ const mapDispatchToProps = (dispatch) => {
       })
         .then(response => response.json())
       dispatch(editPost(post))
+    },
+
+    onReceivePosts: () => {
+      fetch('http://localhost:8081/api/')
+        .then(response => response.json())
+        .then(posts => dispatch(receivePosts(posts)))
     }
   }
 }
@@ -67,6 +74,8 @@ export class PostsList extends Component {
       posts: this.props.posts
     }
   }
+
+  componentDidMount() { this.props.onReceivePosts() }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ posts: nextProps.posts })
@@ -128,9 +137,9 @@ export class PostsList extends Component {
           icon={<AddAPhoto />}
           onClick={this.isOpen}
         >
-          <EditPost
+          <PostActions
             onAddPost={this.props.onAddPost}
-            post={{ id: this.state.posts.length, title: '', description: '' }}
+            post={{ id: '', title: '', description: '' }}
             isOpen={this.state.isOpen}
             isClose={this.isClose}
           />
