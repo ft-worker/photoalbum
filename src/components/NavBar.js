@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Posts from '../containers/Posts';
-import MyPosts from '../containers/MyPosts';
+//import MyPosts from '../containers/MyPosts';
 import RaisedButton from 'material-ui/RaisedButton';
-import { Route, Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import { AppBar } from 'material-ui'
+import { login, logout, isLoggedIn } from '../AuthService'
 
 const style = {
     marginTop: 5,
@@ -38,7 +39,16 @@ export default class NavBar extends Component {
     render() {
         return (
             <div>
-                <Link to="/">
+                <AppBar
+                    title={<span >Instagram</span>}
+                    style={{ maxWidth: 500 }}
+                    iconElementLeft={<div />}
+                    iconElementRight={isLoggedIn() ?
+                        (<RaisedButton label="Log Out" secondary onClick={() => logout()} />) :
+                        (<RaisedButton label="Join" secondary onClick={() => login()} />)
+                    }
+                />
+                <Link to="/posts">
                     <RaisedButton
                         label="All Photos"
                         backgroundColor={this.state.selectall ? style.color1 : style.color2}
@@ -46,7 +56,7 @@ export default class NavBar extends Component {
                         onClick={() => this.handleClickAll()}
                     />
                 </Link>
-                <Link to="/my-posts">
+                <Link to="/myposts">
                     <RaisedButton
                         label="My Photos"
                         backgroundColor={this.state.selectmy ? style.color1 : style.color2}
@@ -54,8 +64,6 @@ export default class NavBar extends Component {
                         onClick={() => this.handleClickMy()}
                     />
                 </Link>
-                <Route exact path="/" component={Posts} />
-                <Route path="/my-posts" component={MyPosts} />
             </div>
         );
     }

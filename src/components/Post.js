@@ -25,12 +25,13 @@ export default class Post extends Component {
     }
 
     render() {
+        const avatarurl = 'https://cdn.shopify.com/s/files/1/0347/1557/files/72662small_large.jpg?v=1490019025'
         return (
             <Card>
                 <CardHeader
                     title={this.props.post.username}
                     subtitle="Russia"
-                    avatar={this.props.post.imageurl}
+                    avatar={this.props.post.username === 'Sergey' ? avatarurl : this.props.post.imageurl}
                 />
                 <CardMedia>
                     <img src={this.props.post.imageurl} alt="" />
@@ -65,8 +66,8 @@ export default class Post extends Component {
                 <CardText style={{ padding: 8, paddingLeft: 18 }}>
                     {'Liked By:'}
                 </CardText>
-                <CardText style={{ maxWidth: 500, padding: 8, paddingLeft: 18 }} >
-                    {this.props.post.description}
+                <CardText style={{ maxWidth: 448, padding: 8, paddingLeft: 18 }} >
+                    <div style={{ width: 448 }}> {this.props.post.description}</div>
                 </CardText>
                 <TextField
                     hintText="Add a comment"

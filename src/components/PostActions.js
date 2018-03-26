@@ -15,7 +15,7 @@ export default class PostActions extends Component {
 
     titleChange(title) {
         this.setState(prevState => {
-            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
+            const updated = moment().format()
             const post = { ...prevState.post, title, updated }
             return { post }
         })
@@ -23,7 +23,7 @@ export default class PostActions extends Component {
 
     descriptionChange(description) {
         this.setState(prevState => {
-            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
+            const updated = moment().format()
             const post = { ...prevState.post, description, updated }
             return { post }
         })
@@ -31,18 +31,17 @@ export default class PostActions extends Component {
 
     urlChange(imageurl) {
         this.setState(prevState => {
-            const date = moment().format('YYYY-MM-DD HH:mm:ss')
-            const post = { ...prevState.post, imageurl, date }
+            const post = { ...prevState.post, imageurl }
             return { post }
         })
     }
 
-    nameChange(username) {
-        this.setState(prevState => {
-            const post = { ...prevState.post, username }
-            return { post }
-        })
-    }
+    // nameChange(username) {
+    //     this.setState(prevState => {
+    //         const post = { ...prevState.post, username }
+    //         return { post }
+    //     })
+    // }
 
     onSave = () => {
         if (this.props.name === 'edit') {
@@ -59,7 +58,7 @@ export default class PostActions extends Component {
     }
 
     render() {
-        const editActions = [
+        const actions = [
             <FlatButton label="Cancel" primary onClick={this.props.isClose} />,
             <FlatButton
                 label="Submit"
@@ -70,13 +69,13 @@ export default class PostActions extends Component {
         return (
             <Dialog
                 title={this.props.name === 'edit' ? 'Edit Photo Info' : 'Add Photo'}
-                actions={editActions}
+                actions={actions}
                 modal={false}
                 open={this.state.isOpen}
                 onRequestClose={this.props.isClose}
                 style={{ maxWidth: 500 }}
             >
-                <div>
+                {/* <div>
                     {
                         this.props.name === 'edit' ? <div /> :
                             <TextField
@@ -84,16 +83,16 @@ export default class PostActions extends Component {
                                 onChange={(event, username) => this.nameChange(username)}
                             />
                     }
-                </div>
+                </div> */}
                 <TextField
                     floatingLabelText="Title"
-                    value={this.state.post.title}
+                    value={this.state.post.title || ''}
                     onChange={(event, title) => this.titleChange(title)}
                 />
                 <TextField
                     floatingLabelText="Description"
                     multiLine
-                    value={this.state.post.description}
+                    value={this.state.post.description || ''}
                     onChange={(event, description) => this.descriptionChange(description)}
                 />
                 <div>
