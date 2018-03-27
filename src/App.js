@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <MuiThemeProvider style={{ maxWidth: 500 }}>
         <Router history={browserHistory}>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={Posts} />
           <Route exact path="/posts" component={Posts} />
           <Route exact path="/myposts" component={MyPosts} />
           <Route exact path="/callback" component={Callback} />

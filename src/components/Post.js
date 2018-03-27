@@ -36,26 +36,31 @@ export default class Post extends Component {
                 <CardMedia>
                     <img src={this.props.post.imageurl} alt="" />
                 </CardMedia>
-                <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
-                    <RaisedButton label="Like" />
-                    <RaisedButton label="Edit" onClick={() => this.isOpen()} >
-                        <PostActions
-                            onEditPost={this.props.onEditPost}
-                            post={this.props.post}
-                            isOpen={this.state.isOpen}
-                            isClose={this.isClose}
-                            name={'edit'}
-                        />
-                    </RaisedButton>
-                    <RaisedButton label="Delete" onClick={this.isDeleteOpen} >
-                        <DeletePost
-                            onDeletePost={this.props.onDeletePost}
-                            post={this.props.post}
-                            isDeleteOpen={this.state.isDeleteOpen}
-                            isDeleteClose={this.isDeleteClose}
-                        />
-                    </RaisedButton>
-                </CardActions>
+                {
+                    this.props.isMyPosts ?
+                        <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
+                            <RaisedButton label="Edit" onClick={() => this.isOpen()} >
+                                <PostActions
+                                    onEditPost={this.props.onEditPost}
+                                    post={this.props.post}
+                                    isOpen={this.state.isOpen}
+                                    isClose={this.isClose}
+                                    name={'edit'}
+                                />
+                            </RaisedButton>
+                            <RaisedButton label="Delete" onClick={this.isDeleteOpen} >
+                                <DeletePost
+                                    onDeletePost={this.props.onDeletePost}
+                                    post={this.props.post}
+                                    isDeleteOpen={this.state.isDeleteOpen}
+                                    isDeleteClose={this.isDeleteClose}
+                                />
+                            </RaisedButton>
+                        </CardActions> :
+                        <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
+                            <RaisedButton label="Like" />
+                        </CardActions>
+                }
                 <CardTitle
                     style={{ maxWidth: '50%', padding: 8, paddingLeft: 18 }}
                     title={this.props.post.title}
@@ -79,7 +84,7 @@ export default class Post extends Component {
                     Show all comments
                 </CardText>
                 <CardText expandable>
-                    <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{this.props.post.username}</div>
+                    <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{'Jakob'}</div>
                     <div style={{ maxWidth: '50%' }}> &nbsp;  What a beauty!!!</div>
                 </CardText>
             </Card>

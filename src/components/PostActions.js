@@ -15,7 +15,7 @@ export default class PostActions extends Component {
 
     titleChange(title) {
         this.setState(prevState => {
-            const updated = moment().format()
+            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
             const post = { ...prevState.post, title, updated }
             return { post }
         })
@@ -23,7 +23,7 @@ export default class PostActions extends Component {
 
     descriptionChange(description) {
         this.setState(prevState => {
-            const updated = moment().format()
+            const updated = moment().format('YYYY-MM-DD HH:mm:ss')
             const post = { ...prevState.post, description, updated }
             return { post }
         })
@@ -35,13 +35,6 @@ export default class PostActions extends Component {
             return { post }
         })
     }
-
-    // nameChange(username) {
-    //     this.setState(prevState => {
-    //         const post = { ...prevState.post, username }
-    //         return { post }
-    //     })
-    // }
 
     onSave = () => {
         if (this.props.name === 'edit') {
@@ -75,15 +68,6 @@ export default class PostActions extends Component {
                 onRequestClose={this.props.isClose}
                 style={{ maxWidth: 500 }}
             >
-                {/* <div>
-                    {
-                        this.props.name === 'edit' ? <div /> :
-                            <TextField
-                                floatingLabelText="Name"
-                                onChange={(event, username) => this.nameChange(username)}
-                            />
-                    }
-                </div> */}
                 <TextField
                     floatingLabelText="Title"
                     value={this.state.post.title || ''}

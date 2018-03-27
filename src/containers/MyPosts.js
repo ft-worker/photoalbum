@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onDeletePost: post => {
-            fetch(`http://localhost:8081/api/myposts/:post_${post.id}`, {
+            fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
                 body: JSON.stringify(post),
                 method: 'DELETE',
                 headers: {
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onAddPost: post => {
-            fetch('http://localhost:8081/api/mypost', {
+            fetch('http://localhost:8081/api/post', {
                 body: JSON.stringify(post),
                 method: 'POST',
                 mode: 'default',
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onEditPost: post => {
-            fetch(`http://localhost:8081/api/myposts/:post_${post.id}`, {
+            fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
                 body: JSON.stringify(post),
                 method: 'POST',
                 mode: 'default',
@@ -83,6 +83,13 @@ export class MyPostsList extends Component {
         this.setState({ posts: nextProps.posts })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.posts !== nextProps.props) {
+            return true;
+        }
+        return false;
+    }
+
     isOpen = () => (
         this.setState({ isOpen: true })
     )
@@ -111,7 +118,7 @@ export class MyPostsList extends Component {
                 >
                     <PostActions
                         onAddPost={this.props.onAddPost}
-                        post={{ username: 'Sergey'}}
+                        post={{ username: 'Sergey' }}
                         isOpen={this.state.isOpen}
                         isClose={this.isClose}
                     />
@@ -124,6 +131,7 @@ export class MyPostsList extends Component {
                                     post={post}
                                     onDeletePost={this.props.onDeletePost}
                                     onEditPost={this.props.onEditPost}
+                                    isMyPosts
                                 />
                             </div>
                         ))

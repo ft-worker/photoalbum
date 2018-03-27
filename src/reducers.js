@@ -27,9 +27,7 @@ function Posts(state = [], action) {
                 }
             }
             return post
-        }
-        )
-
+        })
     }
     if (action.type === DELETE_POST) {
         return state.filter((post) => post.id !== action.post.id)

@@ -5,7 +5,6 @@ import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import moment from 'moment/moment.js';
 import fetch from 'cross-fetch'
-import { getAccessToken } from '../AuthService';
 import NavBar from '../components/NavBar'
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -24,7 +23,7 @@ const mapDispatchToProps = (dispatch) => {
         }
       })
         .then(response => response.json())
-      .then(() => dispatch(deletePost(post)))
+        .then(() => dispatch(deletePost(post)))
     },
 
     onAddPost: post => {
@@ -54,10 +53,10 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     onReceivePosts: () => {
-      fetch('http://localhost:8081/api/', {
+      fetch('http://localhost:8081/api/posts', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getAccessToken()}`
+          // 'Authorization': `Bearer ${getAccessToken()}`
         }
       })
         .then(response => response.json())
@@ -81,6 +80,13 @@ export class PostsList extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ posts: nextProps.posts })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.posts !== nextProps.props) {
+      return true;
+    }
+    return false;
   }
 
   sortByDate(event) {
@@ -125,7 +131,7 @@ export class PostsList extends Component {
     return (
       <div>
         <NavBar />
-        <div style={{ marginTop: 13, marginLeft: 7, maxWidth: 500 }}>
+        <div style={{ height: 37, marginTop: 8, maxWidth: 500 }}>
           <RadioButtonGroup
             name="post"
             defaultSelected="date"
@@ -150,8 +156,7 @@ export class PostsList extends Component {
               <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
                 <Post
                   post={post}
-                  onDeletePost={this.props.onDeletePost}
-                  onEditPost={this.props.onEditPost}
+                  isMyPosts={false}
                 />
               </div>
             ))
