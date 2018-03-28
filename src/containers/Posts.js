@@ -6,6 +6,7 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import moment from 'moment/moment.js';
 import fetch from 'cross-fetch'
 import NavBar from '../components/NavBar'
+
 const mapStateToProps = (state, ownProps) => {
   return {
     posts: state.Posts

@@ -8,6 +8,7 @@ import PostActions from '../components/PostActions'
 import fetch from 'cross-fetch'
 import { getAccessToken } from '../AuthService';
 import NavBar from '../components/NavBar'
+import { isLoggedIn } from '../AuthService'
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -22,7 +23,8 @@ const mapDispatchToProps = (dispatch) => {
                 body: JSON.stringify(post),
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAccessToken()}`
                 }
             })
                 .then(response => response.json())
@@ -35,7 +37,8 @@ const mapDispatchToProps = (dispatch) => {
                 method: 'POST',
                 mode: 'default',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAccessToken()}`
                 }
             })
                 .then(response => response.json())
@@ -48,7 +51,8 @@ const mapDispatchToProps = (dispatch) => {
                 method: 'POST',
                 mode: 'default',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAccessToken()}`
                 }
             })
                 .then(response => response.json())
@@ -108,35 +112,41 @@ export class MyPostsList extends Component {
         return (
             <div>
                 <NavBar />
-                <FlatButton
-                    label="Add new photo"
-                    labelPosition="after"
-                    containerElement="label"
-                    style={{ marginTop: 5, width: 500 }}
-                    icon={<AddAPhoto />}
-                    onClick={this.isOpen}
-                >
-                    <PostActions
-                        onAddPost={this.props.onAddPost}
-                        post={{ username: 'Sergey' }}
-                        isOpen={this.state.isOpen}
-                        isClose={this.isClose}
-                    />
-                </FlatButton>
-                <div style={{ clear: 'both' }}>
-                    {
-                        this.state.posts.map((post) => (
-                            <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
-                                <Post
-                                    post={post}
-                                    onDeletePost={this.props.onDeletePost}
-                                    onEditPost={this.props.onEditPost}
-                                    isMyPosts
+                {
+                    isLoggedIn() ?
+                        <div>
+                            <FlatButton
+                                label="Add new photo"
+                                labelPosition="after"
+                                containerElement="label"
+                                style={{ marginTop: 5, width: 500 }}
+                                icon={<AddAPhoto />}
+                                onClick={this.isOpen}
+                            >
+                                <PostActions
+                                    onAddPost={this.props.onAddPost}
+                                    post={{ username: 'Sergey' }}
+                                    isOpen={this.state.isOpen}
+                                    isClose={this.isClose}
                                 />
+                            </FlatButton>
+                            <div style={{ clear: 'both' }}>
+                                {
+                                    this.state.posts.map((post) => (
+                                        <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+                                            <Post
+                                                post={post}
+                                                onDeletePost={this.props.onDeletePost}
+                                                onEditPost={this.props.onEditPost}
+                                                isMyPosts
+                                            />
+                                        </div>
+                                    ))
+                                }
                             </div>
-                        ))
-                    }
-                </div>
+                        </div> :
+                        <p> You need to Log In to see your posts </p>
+                }
             </div>
         )
     }

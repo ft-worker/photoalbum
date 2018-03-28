@@ -1,6 +1,8 @@
 import decode from 'jwt-decode';
 import auth0 from 'auth0-js';
 import { browserHistory } from 'react-router';
+//import { userAccessToken } from './components/Callback'
+//import { Auth0Lock } from 'auth0-lock/lib';
 
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
@@ -24,10 +26,16 @@ export function login() {
     });
 }
 
+// let lock = new Auth0Lock('LguB0J5eOOx7hAAKjmgUbH67kNhlMeDy', CLIENT_DOMAIN);
+
+// function getUser() {
+//     lock.getUserInfo(userAccessToken, (err, result) => console.log(err + '........' + result))
+// }
+
 export function logout() {
     clearIdToken();
     clearAccessToken();
-    browserHistory.push('/');
+    browserHistory.push('/posts');
 }
 
 export function requireAuth(nextState, replace) {
