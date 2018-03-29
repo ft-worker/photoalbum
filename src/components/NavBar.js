@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-//import MyPosts from '../containers/MyPosts';
+import Authorize from '.././Authorize';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router';
 import { AppBar } from 'material-ui'
-import { login, logout, isLoggedIn } from '../AuthService'
 
 const style = {
     marginTop: 5,
@@ -17,7 +16,9 @@ export default class NavBar extends Component {
         super(props);
         this.state = {
             selectall: true,
-            selectmy: false
+            selectmy: false,
+            isOpen: false,
+            isLoginOpen: false
         }
     }
     handleClickAll() {
@@ -36,6 +37,12 @@ export default class NavBar extends Component {
             })
         }
     }
+
+    isOpen = () => (this.setState({ isOpen: true }))
+    isClose = () => (this.setState({ isOpen: false }))
+    isLoginOpen = () => (this.setState({ isLoginOpen: true }))
+    isLoginClose = () => (this.setState({ isLoginOpen: false }))
+
     render() {
         return (
             <div>
@@ -43,9 +50,15 @@ export default class NavBar extends Component {
                     title={<span >Instagram</span>}
                     style={{ maxWidth: 500 }}
                     iconElementLeft={<div />}
-                    iconElementRight={isLoggedIn() ?
-                        (<RaisedButton label="Log Out" secondary onClick={() => logout()} />) :
-                        (<RaisedButton label="Join" secondary onClick={() => login()} />)
+                    iconElementRight={
+                        <div>
+                            <RaisedButton label="Sign Up" secondary onClick={this.isOpen} >
+                                <Authorize isOpen={this.state.isOpen} isClose={this.isClose} />
+                            </RaisedButton>
+                            <RaisedButton label="Log In" secondary  onClick={this.isLoginOpen} >
+                                <Authorize name={'login'} isOpen={this.state.isLoginOpen} isClose={this.isLoginClose} />
+                            </RaisedButton>
+                        </div>
                     }
                 />
                 <Link to="/posts">

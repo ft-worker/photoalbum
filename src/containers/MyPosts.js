@@ -6,9 +6,23 @@ import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo'
 import FlatButton from 'material-ui/FlatButton';
 import PostActions from '../components/PostActions'
 import fetch from 'cross-fetch'
-import { getAccessToken } from '../AuthService';
 import NavBar from '../components/NavBar'
-import { isLoggedIn } from '../AuthService'
+
+function appFetch(url, method, body) {
+    let myHeaders = {
+        'Content-Type': 'application/json',
+        'User-Id': '1'
+    }
+    let fullurl = `http://localhost:8081/api/posts${url ? url : ''}`;
+    let myInit = {
+        method: method ? method : 'GET',
+        headers: myHeaders,
+        body: body ? JSON.stringify(body) : ''
+    }
+    console.log(fullurl)
+    return fetch(fullurl, myInit)
+}
+
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -19,53 +33,25 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onDeletePost: post => {
-            fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-                body: JSON.stringify(post),
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAccessToken()}`
-                }
-            })
+            appFetch('/post_id', 'DELETE', post)
                 .then(response => response.json())
                 .then(() => dispatch(deletePost(post)))
         },
 
         onAddPost: post => {
-            fetch('http://localhost:8081/api/post', {
-                body: JSON.stringify(post),
-                method: 'POST',
-                mode: 'default',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAccessToken()}`
-                }
-            })
+            appFetch('/post_id', 'POST', post)
                 .then(response => response.json())
                 .then(post => dispatch(addPost(post)))
         },
 
         onEditPost: post => {
-            fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-                body: JSON.stringify(post),
-                method: 'POST',
-                mode: 'default',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAccessToken()}`
-                }
-            })
+            appFetch('/post_id', 'POST', post)
                 .then(response => response.json())
                 .then(() => dispatch(editPost(post)))
         },
 
         onReceivePosts: () => {
-            fetch('http://localhost:8081/api/myposts', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAccessToken()}`
-                }
-            })
+            appFetch()
                 .then(response => response.json())
                 .then(posts => dispatch(receivePosts(posts)))
         }
@@ -112,41 +98,36 @@ export class MyPostsList extends Component {
         return (
             <div>
                 <NavBar />
-                {
-                    isLoggedIn() ?
-                        <div>
-                            <FlatButton
-                                label="Add new photo"
-                                labelPosition="after"
-                                containerElement="label"
-                                style={{ marginTop: 5, width: 500 }}
-                                icon={<AddAPhoto />}
-                                onClick={this.isOpen}
-                            >
-                                <PostActions
-                                    onAddPost={this.props.onAddPost}
-                                    post={{ username: 'Sergey' }}
-                                    isOpen={this.state.isOpen}
-                                    isClose={this.isClose}
+                <FlatButton
+                    label="Add new photo"
+                    labelPosition="after"
+                    containerElement="label"
+                    style={{ marginTop: 5, width: 500 }}
+                    icon={<AddAPhoto />}
+                    onClick={this.isOpen}
+                >
+                    <PostActions
+                        onAddPost={this.props.onAddPost}
+                        post={{}}
+                        isOpen={this.state.isOpen}
+                        isClose={this.isClose}
+                    />
+                </FlatButton>
+                <div style={{ clear: 'both' }}>
+                    {
+                        this.state.posts.map((post) => (
+                            <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+                                <Post
+                                    post={post}
+                                    onDeletePost={this.props.onDeletePost}
+                                    onEditPost={this.props.onEditPost}
+                                    isMyPosts
                                 />
-                            </FlatButton>
-                            <div style={{ clear: 'both' }}>
-                                {
-                                    this.state.posts.map((post) => (
-                                        <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
-                                            <Post
-                                                post={post}
-                                                onDeletePost={this.props.onDeletePost}
-                                                onEditPost={this.props.onEditPost}
-                                                isMyPosts
-                                            />
-                                        </div>
-                                    ))
-                                }
                             </div>
-                        </div> :
-                        <p> You need to Log In to see your posts </p>
-                }
+                        ))
+                    }
+                </div>
+
             </div>
         )
     }

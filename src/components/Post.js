@@ -25,13 +25,13 @@ export default class Post extends Component {
     }
 
     render() {
-        const avatarurl = 'https://cdn.shopify.com/s/files/1/0347/1557/files/72662small_large.jpg?v=1490019025'
+        const avatarurl = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
         return (
             <Card>
                 <CardHeader
                     title={this.props.post.username}
                     subtitle="Russia"
-                    avatar={this.props.post.username === 'Sergey' ? avatarurl : this.props.post.imageurl}
+                    avatar={avatarurl}
                 />
                 <CardMedia>
                     <img src={this.props.post.imageurl} alt="" />

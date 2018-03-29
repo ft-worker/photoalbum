@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Post from '../components/Post';
 import { connect } from 'react-redux';
-import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
+import { receivePosts } from '../actions.js'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import moment from 'moment/moment.js';
 import fetch from 'cross-fetch'
@@ -15,49 +15,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onDeletePost: post => {
-      fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-        body: JSON.stringify(post),
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(() => dispatch(deletePost(post)))
-    },
-
-    onAddPost: post => {
-      fetch('http://localhost:8081/api/post', {
-        body: JSON.stringify(post),
-        method: 'POST',
-        mode: 'default',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(post => dispatch(addPost(post)))
-    },
-
-    onEditPost: post => {
-      fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-        body: JSON.stringify(post),
-        method: 'POST',
-        mode: 'default',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(() => dispatch(editPost(post)))
-    },
-
     onReceivePosts: () => {
-      fetch('http://localhost:8081/api/posts', {
+      fetch('http://localhost:8081/api/allposts', {
         headers: {
-          'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${getAccessToken()}`
+          'Content-Type': 'application/json'
         }
       })
         .then(response => response.json())
