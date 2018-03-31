@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch) => {
         onEditPost: post => {
             appFetch('/post_id', 'POST', post)
                 .then(response => response.json())
-                .then(() => dispatch(editPost(post)))
+                .then(post => dispatch(editPost(post)))
         },
 
         onReceivePosts: () => {
@@ -116,7 +116,7 @@ export class MyPostsList extends Component {
                 <div style={{ clear: 'both' }}>
                     {
                         this.state.posts.map((post) => (
-                            <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+                            <div key={post.post_id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
                                 <Post
                                     post={post}
                                     onDeletePost={this.props.onDeletePost}

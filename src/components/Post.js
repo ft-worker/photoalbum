@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-//import FlatButton from 'material-ui/FlatButton';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import moment from 'moment/moment.js';
 import PostActions from './PostActions'
 import DeletePost from './DeletePost'
 import { RaisedButton } from 'material-ui';
+import Comments from './Comments'
 
 export default class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpen: false,
-            isDeleteOpen: false
+            isDeleteOpen: false,
+            showComments: false
         }
     }
     isOpen = () => (this.setState({ isOpen: true }))
@@ -24,12 +25,18 @@ export default class Post extends Component {
         this.setState({ posts: nextProps.posts })
     }
 
+    handleClick = () => {
+        this.setState(prevState => {
+            return { showComments: !prevState.showComments }
+        })
+    }
+
     render() {
         const avatarurl = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
         return (
             <Card>
                 <CardHeader
-                    title={this.props.post.username}
+                    title={this.props.post.name}
                     subtitle="Russia"
                     avatar={avatarurl}
                 />
@@ -74,19 +81,10 @@ export default class Post extends Component {
                 <CardText style={{ maxWidth: 448, padding: 8, paddingLeft: 18 }} >
                     <div style={{ width: 448 }}> {this.props.post.description}</div>
                 </CardText>
-                <TextField
-                    hintText="Add a comment"
-                    style={{ paddingLeft: 18, maxWidth: 445 }}
-                    multiLine
-                    fullWidth
-                />
-                <CardText actAsExpander style={{ maxWidth: 125, padding: 8, paddingLeft: 18 }}>
-                    Show all comments
+                <CardText style={{ maxWidth: 125, padding: 8, paddingLeft: 18 }}>
+                    <p onClick={this.handleClick}>{this.state.showComments ? 'Hide comments' : 'Show comments'}</p>
                 </CardText>
-                <CardText expandable>
-                    <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{'Jakob'}</div>
-                    <div style={{ maxWidth: '50%' }}> &nbsp;  What a beauty!!!</div>
-                </CardText>
+                <Comments showComments={this.state.showComments} />
             </Card>
         )
     }
