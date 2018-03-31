@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import FlatButton from 'material-ui/FlatButton'
-//import fetch from 'cross-fetch'
+import fetch from 'cross-fetch'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
+import { connect } from 'react-redux'
 
 function appFetch(url, method, body) {
     let myHeaders = {
@@ -14,29 +15,29 @@ function appFetch(url, method, body) {
         headers: myHeaders,
         body: body ? JSON.stringify(body) : ''
     }
-    console.log(fullurl)
     return fetch(fullurl, myInit)
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onLoginUser: () => {
-            appFetch('/:id')
+        onLoginUser: login => {
+            appFetch(`/${login}`)
                 .then(response => response.json())
+                .then(user => localStorage.setItem('user_id', user.id))
         },
         onAddUser: user => {
             appFetch('', 'POST', user)
                 .then(response => response.json())
+                .then(id => localStorage.setItem('user_id', id))
         }
     }
 }
 
-export default class Authorize extends Component {
+class AuthorizeForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
             isOpen: this.props.isOpen,
-            isClose: true,
             user: {}
         }
     }
@@ -55,16 +56,17 @@ export default class Authorize extends Component {
         })
     }
 
-    usernameChange(username) {
+    usernameChange(name) {
         this.setState(prevState => {
-            const user = { ...prevState.user, username }
+            const user = { ...prevState.user, name }
             return { user }
         })
     }
 
     onSave = () => {
+        this.props.isLoggedIn()
         if (this.props.name === 'login') {
-            this.props.onLoginUser();
+            this.props.onLoginUser(this.state.user.login)
             this.props.isClose()
         } else {
             this.props.onAddUser(this.state.user);
@@ -119,5 +121,8 @@ export default class Authorize extends Component {
     }
 }
 
+const Authorize = connect(
+    mapDispatchToProps,
+)(AuthorizeForm)
 
-
+export default Authorize;

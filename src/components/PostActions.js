@@ -75,15 +75,6 @@ export default class PostActions extends Component {
                 onRequestClose={this.props.isClose}
                 style={{ maxWidth: 500 }}
             >
-                <div>
-                    {
-                        this.props.name === 'edit' ? <div /> :
-                            <TextField
-                                floatingLabelText="Pick a username"
-                                onChange={(event, username) => this.usernameChange(username)}
-                            />
-                    }
-                </div>
                 <TextField
                     floatingLabelText="Title"
                     value={this.state.post.title || ''}

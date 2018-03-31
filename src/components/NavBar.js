@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import Authorize from '.././Authorize';
-import RaisedButton from 'material-ui/RaisedButton';
-import { Link } from 'react-router';
-import { AppBar } from 'material-ui'
+import React, { Component } from 'react'
+import RaisedButton from 'material-ui/RaisedButton'
+import { Link } from 'react-router'
 
 const style = {
     marginTop: 5,
@@ -17,10 +15,14 @@ export default class NavBar extends Component {
         this.state = {
             selectall: true,
             selectmy: false,
-            isOpen: false,
-            isLoginOpen: false
+            loggedIn: this.props.loggedIn
         }
     }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ loggedIn: nextProps.loggedIn })
+    }
+
     handleClickAll() {
         if (!this.state.selectall) {
             this.setState({
@@ -38,29 +40,9 @@ export default class NavBar extends Component {
         }
     }
 
-    isOpen = () => (this.setState({ isOpen: true }))
-    isClose = () => (this.setState({ isOpen: false }))
-    isLoginOpen = () => (this.setState({ isLoginOpen: true }))
-    isLoginClose = () => (this.setState({ isLoginOpen: false }))
-
     render() {
         return (
             <div>
-                <AppBar
-                    title={<span >Instagram</span>}
-                    style={{ maxWidth: 500 }}
-                    iconElementLeft={<div />}
-                    iconElementRight={
-                        <div>
-                            <RaisedButton label="Sign Up" secondary onClick={this.isOpen} >
-                                <Authorize isOpen={this.state.isOpen} isClose={this.isClose} />
-                            </RaisedButton>
-                            <RaisedButton label="Log In" secondary  onClick={this.isLoginOpen} >
-                                <Authorize name={'login'} isOpen={this.state.isLoginOpen} isClose={this.isLoginClose} />
-                            </RaisedButton>
-                        </div>
-                    }
-                />
                 <Link to="/posts">
                     <RaisedButton
                         label="All Photos"
@@ -69,14 +51,24 @@ export default class NavBar extends Component {
                         onClick={() => this.handleClickAll()}
                     />
                 </Link>
-                <Link to="/myposts">
+                {
+                    !this.state.loggedIn ? 
                     <RaisedButton
-                        label="My Photos"
-                        backgroundColor={this.state.selectmy ? style.color1 : style.color2}
-                        style={style}
-                        onClick={() => this.handleClickMy()}
-                    />
-                </Link>
+                            label="My Photos"
+                            backgroundColor={this.state.selectmy ? style.color1 : style.color2}
+                            style={style}
+                            disabled
+                        /> : 
+                    <Link to="/myposts" >
+                        <RaisedButton
+                            label="My Photos"
+                            backgroundColor={this.state.selectmy ? style.color1 : style.color2}
+                            style={style}
+                            disabled={!this.state.loggedIn}
+                            onClick={() => this.handleClickMy()}
+                        />
+                    </Link >
+                }
             </div>
         );
     }

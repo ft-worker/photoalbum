@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import Post from '../components/Post';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import Post from '../components/Post'
+import { connect } from 'react-redux'
 import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo'
-import FlatButton from 'material-ui/FlatButton';
+import FlatButton from 'material-ui/FlatButton'
 import PostActions from '../components/PostActions'
 import fetch from 'cross-fetch'
-import NavBar from '../components/NavBar'
+import Header from '../components/Header'
 
 function appFetch(url, method, body) {
     let myHeaders = {
         'Content-Type': 'application/json',
-        'User-Id': '1'
+        'User-Id': `${localStorage.getItem('user_id')}`
     }
     let fullurl = `http://localhost:8081/api/posts${url ? url : ''}`;
     let myInit = {
         method: method ? method : 'GET',
         headers: myHeaders,
+        mode: 'CORS',
         body: body ? JSON.stringify(body) : ''
     }
-    console.log(fullurl)
     return fetch(fullurl, myInit)
 }
 
@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch) => {
         },
 
         onAddPost: post => {
-            appFetch('/post_id', 'POST', post)
+            appFetch('', 'POST', post)
                 .then(response => response.json())
                 .then(post => dispatch(addPost(post)))
         },
@@ -97,7 +97,7 @@ export class MyPostsList extends Component {
     render() {
         return (
             <div>
-                <NavBar />
+                <Header />
                 <FlatButton
                     label="Add new photo"
                     labelPosition="after"

@@ -26,6 +26,7 @@
     "react-dom": "^16.2.0",
     "react-history": "^0.18.2",
     "react-icons": "^2.2.7",
+    "react-material-ui-form-validator": "^1.1.0",
     "react-moment": "^0.7.0",
     "react-popout-component": "^1.7.3",
     "react-redux": "^5.0.7",

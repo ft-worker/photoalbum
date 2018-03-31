@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import Post from '../components/Post';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import Post from '../components/Post'
+import { connect } from 'react-redux'
 import { receivePosts } from '../actions.js'
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import moment from 'moment/moment.js';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
+import moment from 'moment/moment.js'
 import fetch from 'cross-fetch'
-import NavBar from '../components/NavBar'
+import Header from '../components/Header'
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -23,6 +23,7 @@ const mapDispatchToProps = (dispatch) => {
       })
         .then(response => response.json())
         .then(posts => dispatch(receivePosts(posts)))
+
     }
   }
 }
@@ -34,7 +35,8 @@ export class PostsList extends Component {
     this.SortByAlphabet = this.SortByAlphabet.bind(this);
     this.sortAlphabetically = this.sortAlphabetically.bind(this);
     this.state = {
-      posts: this.props.posts
+      posts: this.props.posts,
+      loggedIn: localStorage.getItem('user_id') ? true : false
     }
   }
 
@@ -92,7 +94,7 @@ export class PostsList extends Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <Header />
         <div style={{ height: 37, marginTop: 8, maxWidth: 500 }}>
           <RadioButtonGroup
             name="post"
