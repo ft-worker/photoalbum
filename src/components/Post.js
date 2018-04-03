@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import moment from 'moment/moment.js';
+import React, { Component } from 'react'
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
+import moment from 'moment/moment.js'
 import PostActions from './PostActions'
 import DeletePost from './DeletePost'
-import { RaisedButton } from 'material-ui';
+import { RaisedButton } from 'material-ui'
 import Comments from './Comments'
 
 export default class Post extends Component {
@@ -12,8 +11,7 @@ export default class Post extends Component {
         super(props);
         this.state = {
             isOpen: false,
-            isDeleteOpen: false,
-            showComments: false
+            isDeleteOpen: false
         }
     }
     isOpen = () => (this.setState({ isOpen: true }))
@@ -23,12 +21,6 @@ export default class Post extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({ posts: nextProps.posts })
-    }
-
-    handleClick = () => {
-        this.setState(prevState => {
-            return { showComments: !prevState.showComments }
-        })
     }
 
     render() {
@@ -75,16 +67,13 @@ export default class Post extends Component {
                         'Updated ' + moment(this.props.post.updated).fromNow() :
                         'Uploaded ' + moment(this.props.post.date).fromNow()}
                 />
-                <CardText style={{ padding: 8, paddingLeft: 18 }}>
-                    {'Liked By:'}
-                </CardText>
-                <CardText style={{ maxWidth: 448, padding: 8, paddingLeft: 18 }} >
+                <CardText style={{ maxWidth: 448, padding: 2, paddingLeft: 18, paddingRight: 16 }} >
                     <div style={{ width: 448 }}> {this.props.post.description}</div>
                 </CardText>
-                <CardText style={{ maxWidth: 125, padding: 8, paddingLeft: 18 }}>
-                    <p onClick={this.handleClick}>{this.state.showComments ? 'Hide comments' : 'Show comments'}</p>
+                <CardText style={{ padding: 2, paddingLeft: 18, paddingRight: 16, fontSize: 12 }}>
+                    {'Liked By:'}
                 </CardText>
-                <Comments showComments={this.state.showComments} />
+                <Comments post={this.props.post} />
             </Card>
         )
     }

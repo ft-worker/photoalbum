@@ -1,136 +1,96 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
-import fetch from 'cross-fetch'
-import TextField from 'material-ui/TextField'
-//import moment from 'moment/moment.js'
+import Comment from './Comment'
+import CommentActions from './CommentActions'
 import { CardText } from 'material-ui/Card'
+import appFetch from '../components/AppFetch'
 
-// const mapStateToProps = (state, ownProps) => {
-//     return {
-//         posts: state.Posts
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         onDeletePost: post => {
-//             fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-//                 body: JSON.stringify(post),
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-
-//                 }
-//             })
-//                 .then(response => response.json())
-//                 .then(() => dispatch(deletePost(post)))
-//         },
-
-//         onAddPost: post => {
-//             fetch('http://localhost:8081/api/post', {
-//                 body: JSON.stringify(post),
-//                 method: 'POST',
-//                 mode: 'default',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-
-//                 }
-//             })
-//                 .then(response => response.json())
-//                 .then(post => dispatch(addPost(post)))
-//         },
-
-//         onEditPost: post => {
-//             fetch(`http://localhost:8081/api/posts/:post_${post.id}`, {
-//                 body: JSON.stringify(post),
-//                 method: 'POST',
-//                 mode: 'default',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-
-//                 }
-//             })
-//                 .then(response => response.json())
-//                 .then(() => dispatch(editPost(post)))
-//         },
-
-//         onReceivePosts: () => {
-//             fetch('http://localhost:8081/api/myposts', {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-
-//                 }
-//             })
-//                 .then(response => response.json())
-//                 .then(posts => dispatch(receivePosts(posts)))
-//         }
-//     }
-// }
-
-
-export class CommentsList extends Component {
+export default class Comments extends Component {
     constructor(props) {
         super(props)
-        // this.state = {
-        //     isOpen: false,
-        //     posts: this.props.posts
-        // }
+        this.state = {
+            comments: [],
+            showComments: false,
+            post_id: this.props.post.post_id
+        }
     }
 
-    // componentWillMount() { this.props.onReceivePosts() }
-
-    // componentWillReceiveProps(nextProps) {
-    //     this.setState({ posts: nextProps.posts })
+    receiveComments = post_id => {
+        appFetch('comments', '', '', post_id)
+            .then(response => response.json())
+            .then(comments => this.setState({ comments: comments }))
+    }
+    addComment = (comment) => {
+        appFetch('comments', 'PUT', comment)
+            .then(response => response.json())
+            .then(comment => this.setState(prevState => { return { ...prevState, comment } }))
+    }
+    // editComment = comment => {
+    //     appFetch('comments/comment_id', 'POST', comment)
+    //         .then(response => response.json())
+    //         .then(response => (
+    //             this.state.comments.map((comment) => {
+    //                 if (comment.comment_id === response.comment_id) {
+    //                     return {
+    //                         ...comment,
+    //                         text: response.text,
+    //                     }
+    //                 }
+    //                 return comment
+    //             }))
+    //         )
     // }
+    // deleteComment = (comment) => {
+    //     console.log(comment)
+    //     appFetch('comments/comment_id', 'DELETE', comment)
+    //         .then(response => response.json())
+    //         .then(comments => console.log(comments))
+    // }    
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (this.props.posts !== nextProps.props) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    // isOpen = () => (
-    //     this.setState({ isOpen: true })
-    // )
-    // isClose = () => (
-    //     this.setState({ isOpen: false })
-    // )
-
-    // isOpen = () => (
-    //     this.setState({ isOpen: true })
-    // )
-    // isClose = () => (
-    //     this.setState({ isOpen: false })
-    // )
-
+    onReceiveComments = () => {
+        if (!this.state.showComments) {
+            this.receiveComments(this.state.post_id)
+            this.handleClick()
+        }
+    }
+    handleClick = () => {
+        this.setState(prevState => {
+            return { showComments: !prevState.showComments }
+        })
+    }
     render() {
         return (
-            <div>
-                <TextField
-                    hintText="Add a comment"
-                    style={{ paddingLeft: 18, maxWidth: 445 }}
-                    multiLine
-                    fullWidth
+            <span>
+                <CommentActions
+                    addComment={this.addComment}
+                    handleComments={this.onReceiveComments}
+                    showComments={this.state.showComments}
+                    post={this.props.post}
                 />
-
+                <CardText
+                    style={{ maxWidth: 125, padding: 2, paddingLeft: 18, paddingRight: 16, paddingBottom: 8 }}
+                    onClick={this.handleClick}
+                >
+                    {this.state.showComments ? 'Hide comments' : 'Show comments'}
+                </CardText>
                 {
-                    this.props.showComments ?
-                        <CardText >
-                            <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{'Jakob'}</div>
-                            <div style={{ maxWidth: '50%' }}> &nbsp;  What a beauty!!!</div>
-                        </CardText> : 
-                        <div />
-            }
-            </div>
+                    this.state.showComments ?
+                        <div>
+                            {
+                                this.state.comments.map((comment) => (
+                                    <div key={comment.comment_id} style={{ maxWidth: 500, paddingBottom: 5 }}>
+                                        <Comment
+                                            comment={comment}
+                                            editComment={this.editComment}
+                                            onDeleteComment={this.deleteComment}
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        :
+                        null
+                }
+            </span>
         )
     }
 }
-
-const Comments = connect(
-    // mapStateToProps,
-    // mapDispatchToProps,
-)(CommentsList)
-
-export default Comments;

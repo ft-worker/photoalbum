@@ -5,23 +5,8 @@ import { addPost, editPost, deletePost, receivePosts } from '../actions.js'
 import AddAPhoto from 'material-ui/svg-icons/image/add-a-photo'
 import FlatButton from 'material-ui/FlatButton'
 import PostActions from '../components/PostActions'
-import fetch from 'cross-fetch'
 import Header from '../components/Header'
-
-function appFetch(url, method, body) {
-    let myHeaders = {
-        'Content-Type': 'application/json',
-        'User-Id': `${localStorage.getItem('user_id')}`
-    }
-    let fullurl = `http://localhost:8081/api/posts${url ? url : ''}`;
-    let myInit = {
-        method: method ? method : 'GET',
-        headers: myHeaders,
-        mode: 'CORS',
-        body: body ? JSON.stringify(body) : ''
-    }
-    return fetch(fullurl, myInit)
-}
+import appFetch from '../components/AppFetch'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -33,25 +18,25 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onDeletePost: post => {
-            appFetch('/post_id', 'DELETE', post)
+            appFetch('myposts/post_id', 'DELETE', post)
                 .then(response => response.json())
                 .then(() => dispatch(deletePost(post)))
         },
 
         onAddPost: post => {
-            appFetch('', 'POST', post)
+            appFetch('myposts', 'POST', post)
                 .then(response => response.json())
                 .then(post => dispatch(addPost(post)))
         },
 
         onEditPost: post => {
-            appFetch('/post_id', 'POST', post)
+            appFetch('myposts/post_id', 'POST', post)
                 .then(response => response.json())
                 .then(post => dispatch(editPost(post)))
         },
 
         onReceivePosts: () => {
-            appFetch()
+            appFetch('myposts')
                 .then(response => response.json())
                 .then(posts => dispatch(receivePosts(posts)))
         }

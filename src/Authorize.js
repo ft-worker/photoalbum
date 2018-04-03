@@ -23,12 +23,18 @@ const mapDispatchToProps = (dispatch) => {
         onLoginUser: login => {
             appFetch(`/${login}`)
                 .then(response => response.json())
-                .then(user => localStorage.setItem('user_id', user.id))
+                .then(user => {
+                    localStorage.setItem('user_id', user.user_id);
+                    localStorage.setItem('name', user.name)
+                })
         },
         onAddUser: user => {
             appFetch('', 'POST', user)
                 .then(response => response.json())
-                .then(id => localStorage.setItem('user_id', id))
+                .then(user => {
+                    localStorage.setItem('user_id', user.user_id);
+                    localStorage.setItem('name', user.name)
+                })
         }
     }
 }

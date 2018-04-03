@@ -4,26 +4,20 @@ import { connect } from 'react-redux'
 import { receivePosts } from '../actions.js'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import moment from 'moment/moment.js'
-import fetch from 'cross-fetch'
 import Header from '../components/Header'
+import appFetch from '../components/AppFetch'
 
 const mapStateToProps = (state, ownProps) => {
   return {
     posts: state.Posts
   }
 }
-
 const mapDispatchToProps = (dispatch) => {
   return {
     onReceivePosts: () => {
-      fetch('http://localhost:8081/api/allposts', {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      appFetch('posts')
         .then(response => response.json())
         .then(posts => dispatch(receivePosts(posts)))
-
     }
   }
 }
@@ -74,8 +68,8 @@ export class PostsList extends Component {
   }
 
   sortAlphabetically(a, b) {
-    const nameA = a.username.toUpperCase();
-    const nameB = b.username.toUpperCase();
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
     if (nameA < nameB) {
       return -1;
     } else if (nameA > nameB) {
@@ -117,7 +111,7 @@ export class PostsList extends Component {
         <div style={{ clear: 'both' }}>
           {
             this.state.posts.map((post) => (
-              <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+              <div key={post.post_id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
                 <Post
                   post={post}
                   isMyPosts={false}
