@@ -19,10 +19,6 @@ export default class Post extends Component {
     isDeleteOpen = () => (this.setState({ isDeleteOpen: true }))
     isDeleteClose = () => (this.setState({ isDeleteOpen: false }))
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ posts: nextProps.posts })
-    }
-
     render() {
         const avatarurl = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
         return (
@@ -73,7 +69,7 @@ export default class Post extends Component {
                 <CardText style={{ padding: 2, paddingLeft: 18, paddingRight: 16, fontSize: 12 }}>
                     {'Liked By:'}
                 </CardText>
-                <Comments post={this.props.post} />
+                <Comments post={this.props.post} showComments={false} />
             </Card>
         )
     }
