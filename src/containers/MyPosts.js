@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton'
 import PostActions from '../components/PostActions'
 import Header from '../components/Header'
 import appFetch from '../components/AppFetch'
-
+import moment from 'moment/moment.js'
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
         onReceivePosts: () => {
             appFetch('myposts')
                 .then(response => response.json())
-                .then(posts => dispatch(receivePosts(posts)))
+                .then(posts => { let sorted = posts.sort((a, b) => (moment(b.date).diff(moment(a.date)))); return dispatch(receivePosts(sorted)) })
         }
     }
 }
@@ -83,36 +83,60 @@ export class MyPostsList extends Component {
         return (
             <div>
                 <Header />
-                <FlatButton
-                    label="Add new photo"
-                    labelPosition="after"
-                    containerElement="label"
-                    style={{ marginTop: 5, width: 500 }}
-                    icon={<AddAPhoto />}
-                    onClick={this.isOpen}
-                >
-                    <PostActions
-                        onAddPost={this.props.onAddPost}
-                        post={{}}
-                        isOpen={this.state.isOpen}
-                        isClose={this.isClose}
-                    />
-                </FlatButton>
-                <div style={{ clear: 'both' }}>
+                <div style={{
+                    display: 'flex',
+                    position: 'relative',
+                    maxWidth: 700,
+                    alignItems: 'stretch',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    marginTop: 0,
+                    paddingTop: 0
+                }}>
+                    <FlatButton
+                        label="Add new photo"
+                        labelPosition="after"
+                        containerElement="label"
+                        style={{ marginTop: 5, width: 700, height: 42 }}
+                        icon={<AddAPhoto />}
+                        onClick={this.isOpen}
+                    >
+                        <PostActions
+                            onAddPost={this.props.onAddPost}
+                            post={{}}
+                            isOpen={this.state.isOpen}
+                            isClose={this.isClose}
+                            addPostFailed={''}
+                        />
+                    </FlatButton>
+                </div>
+                <div style={{
+                    clear: 'both',
+                    position: 'relative',
+                    maxWidth: 700,
+                    alignItems: 'stretch',
+                    marginTop: 0,
+                    marginLeft: 'auto',
+                    marginRight: 'auto'
+                }}>
                     {
-                        this.state.posts.map((post) => (
-                            <div key={post.post_id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
-                                <Post
-                                    post={post}
-                                    onDeletePost={this.props.onDeletePost}
-                                    onEditPost={this.props.onEditPost}
-                                    isMyPosts
-                                />
+                        this.state.posts.length === 0 ?
+                            <div style={{ color: 'grey', maxWidth: 700, textAlign: 'center', marginTop: 25 }}>
+                                <p>You don't have any posts yet.</p>
                             </div>
-                        ))
+                            :
+                            this.state.posts.map((post) => (
+                                <div key={post.post_id} style={{ margin: 0, marginTop: 5, maxWidth: 700 }}>
+                                    <Post
+                                        post={post}
+                                        onDeletePost={this.props.onDeletePost}
+                                        onEditPost={this.props.onEditPost}
+                                        isMyPosts
+                                    />
+                                </div>
+                            ))
                     }
                 </div>
-
             </div>
         )
     }

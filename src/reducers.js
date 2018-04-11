@@ -3,7 +3,8 @@ import {
     ADD_POST,
     EDIT_POST,
     DELETE_POST,
-    RECEIVE_POSTS
+    RECEIVE_POSTS,
+    ADD_USER
 } from './actions'
 
 function Posts(state = [], action) {
@@ -12,8 +13,8 @@ function Posts(state = [], action) {
     }
     if (action.type === ADD_POST) {
         return [
-            ...state,
-            action.post
+            action.post,
+            ...state
         ]
     }
     if (action.type === EDIT_POST) {
@@ -35,6 +36,14 @@ function Posts(state = [], action) {
     return state
 }
 
+function User(state = {}, action) {
+    if (action.type === ADD_USER) {
+        return action.user
+    }
+    return state
+}
+
 export default combineReducers({
-    Posts
+    Posts,
+    User
 });

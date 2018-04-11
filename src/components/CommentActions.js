@@ -30,23 +30,32 @@ export default class CommentActions extends Component {
 
     render() {
         const actions = [
-            <FlatButton label="Cancel" primary onClick={this.props.isClose} />,
+            <FlatButton label="Cancel" primary labelStyle={{ fontWeight: 'bold'}} onClick={this.props.isClose} />,
             <FlatButton
                 label="Submit"
-                secondary
+                primary 
+                labelStyle={{ fontWeight: 'bold'}}
                 onClick={this.onSave}
             />,
         ]
         return (
             <Dialog
                 title={'Edit Comment'}
+                titleStyle={{ color: '#00BCD4' }}
                 actions={actions}
                 modal={false}
                 open={this.state.open}
                 onRequestClose={this.props.isClose}
-                style={{ maxWidth: 500 }}
+                contentStyle={{
+                    position: 'relative',
+                    width: '90%',
+                    maxWidth: 500
+                }}
             >
                 <TextField
+                    required
+                    fullWidth
+                    multiLine
                     floatingLabelText="Comment"
                     value={this.state.comment.text || ''}
                     onChange={(event, text) => this.textChange(text)}
