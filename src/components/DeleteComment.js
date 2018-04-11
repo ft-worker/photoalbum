@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-export default class DeletPost extends Component {
+export default class DeleteComment extends Component {
     onDelete = () => {
-        this.props.onDeletePost(this.props.post);
-        this.props.isDeleteClose();
+        this.props.deleteComment(this.props.comment);
+        this.props.isClose();
     }
     render() {
         const deleteActions = [
-            <FlatButton label="Cancel" primary labelStyle={{ fontWeight: 'bold'}} onClick={this.props.isDeleteClose} />,
+            <FlatButton label="Cancel" primary labelStyle={{ fontWeight: 'bold'}} onClick={this.props.isClose} />,
             <FlatButton label="Delete" primary labelStyle={{ fontWeight: 'bold'}} onClick={this.onDelete} />
         ];
         return (
@@ -20,7 +20,7 @@ export default class DeletPost extends Component {
                     maxWidth: 500
                 }}
                 actions={deleteActions}
-                open={this.props.isDeleteOpen}
+                open={this.props.open}
                 onRequestClose={() => this.props.isDeleteClose()}
             >
                 Do you want to delete this post?

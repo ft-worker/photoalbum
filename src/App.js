@@ -7,7 +7,7 @@ import MyPosts from './containers/MyPosts';
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider style={{ maxWidth: 500 }}>
+      <MuiThemeProvider style={{ maxWidth: '100%' }}>
           <Router history={browserHistory}>
             <Route exact path="/" component={Posts} />
             <Route exact path="/posts" component={Posts} />

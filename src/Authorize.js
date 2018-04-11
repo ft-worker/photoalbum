@@ -1,34 +1,24 @@
 import React, { Component } from 'react'
 import FlatButton from 'material-ui/FlatButton'
-import fetch from 'cross-fetch'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
 import { connect } from 'react-redux'
+import appFetch from './components/AppFetch'
+import { addUser } from './actions.js'
 
-function appFetch(url, method, body) {
-    let myHeaders = {
-        'Content-Type': 'application/json'
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.User
     }
-    let fullurl = `http://localhost:8081/api/users${url ? url : ''}`;
-    let myInit = {
-        method: method ? method : 'GET',
-        headers: myHeaders,
-        body: body ? JSON.stringify(body) : ''
-    }
-    return fetch(fullurl, myInit)
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onLoginUser: login => {
-            appFetch(`/${login}`)
-                .then(response => response.json())
-                .then(user => localStorage.setItem('user_id', user.id))
+        loginUser: user => {
+            dispatch(addUser(user))
         },
-        onAddUser: user => {
-            appFetch('', 'POST', user)
-                .then(response => response.json())
-                .then(id => localStorage.setItem('user_id', id))
+        addUser: user => {
+            dispatch(addUser(user))
         }
     }
 }
@@ -38,8 +28,59 @@ class AuthorizeForm extends Component {
         super(props)
         this.state = {
             isOpen: this.props.isOpen,
-            user: {}
+            user: this.props.user,
+            loginFailed: this.props.loginFailed
         }
+    }
+
+    onLoginUser = (login, body) => {
+        appFetch(`users/${login}`, 'POST', body)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                }
+            })
+            .then(user => {
+                if (user !== {}) {
+                    this.setState({ loginFailed: '' })
+                    localStorage.setItem('user_id', user.user_id);
+                    localStorage.setItem('name', user.name)
+                    this.props.setUser(user)
+                    this.props.loginUser(user)
+                    this.props.isLoggedIn()
+                    this.props.isClose()
+                }
+            })
+            .catch(err => this.setState({
+                loginFailed: 'Login and password didn\'t match'
+            }))
+    }
+
+    onAddUser = user => {
+        appFetch('users', 'PUT', user)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                }
+            })
+            .then(user => {
+                if (user !== {}) {
+                    this.setState({ loginFailed: '' })
+                    localStorage.setItem('user_id', user.user_id);
+                    localStorage.setItem('name', user.name)
+                    this.props.setUser(user)
+                    this.props.addUser(user)
+                    this.props.isLoggedIn()
+                    this.props.isClose()
+                }
+            })
+            .catch(err => this.setState({
+                loginFailed: 'Login already in use'
+            }))
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ isOpen: nextProps.isOpen, loginFailed: nextProps.loginFailed })
     }
 
     passwordChange(password) {
@@ -64,65 +105,86 @@ class AuthorizeForm extends Component {
     }
 
     onSave = () => {
-        this.props.isLoggedIn()
         if (this.props.name === 'login') {
-            this.props.onLoginUser(this.state.user.login)
-            this.props.isClose()
+            this.onLoginUser(this.state.user.login, this.state.user)
         } else {
-            this.props.onAddUser(this.state.user);
-            this.props.isClose()
+            if (this.state.user.name && this.state.user.login && this.state.user.password) {
+                this.onAddUser(this.state.user)
+            } else {
+                this.setState({
+                    loginFailed: 'Fill required fields'
+                })
+            }
         }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({ isOpen: nextProps.isOpen })
     }
 
     render() {
         const actions = [
-            <FlatButton label="Cancel" primary onClick={this.props.isClose} />,
             <FlatButton
-                label="Submit"
-                secondary
+                label={this.props.name === 'login' ? 'Login' : 'Sign Up'}
                 onClick={this.onSave}
+                style={{
+                    backgroundColor: '#00BCD4',
+                    color: 'white',
+                    fontWeight: 'bold'
+                }}
             />,
         ]
         return (
-            <Dialog
-                title={this.props.name === 'login' ? 'Log In' : 'Create account'}
-                actions={actions}
-                modal={false}
-                open={this.state.isOpen}
-                onRequestClose={this.props.isClose}
-                style={{ maxWidth: 500 }}
-            >
-                <div>
-                    {
-                        this.props.name === 'login' ? <div /> :
-                            <TextField
-                                floatingLabelText="Pick a username"
-                                onChange={(event, username) => this.usernameChange(username)}
-                            />
-                    }
-                </div>
-                <TextField
-                    floatingLabelText="Login"
-                    value={this.state.user.login || ''}
-                    onChange={(event, login) => this.loginChange(login)}
-                />
-                <TextField
-                    floatingLabelText="Password"
-                    type="password"
-                    onChange={(event, password) => this.passwordChange(password)}
-                />
-            </Dialog>
-
+            <div>
+                <Dialog
+                    title={this.props.name === 'login' ? 'Log In' : 'Create an account'}
+                    actions={actions}
+                    modal={false}
+                    open={this.state.isOpen}
+                    onRequestClose={this.props.isClose}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: -220
+                    }}
+                    titleStyle={{ color: '#00BCD4' }}
+                    actionsContainerStyle={{ textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
+                >
+                    <div style={{ color: 'red', fontSize: 11 }}>
+                        {
+                            this.state.loginFailed
+                        }
+                    </div>
+                    <div>
+                        {
+                            this.props.name === 'login' ? <div /> :
+                                <TextField
+                                    fullWidth
+                                    floatingLabelText="Name*"
+                                    required
+                                    onChange={(event, username) => this.usernameChange(username)}
+                                />
+                        }
+                    </div>
+                    <TextField
+                        floatingLabelText="Login*"
+                        required
+                        fullWidth
+                        onChange={(event, login) => this.loginChange(login)}
+                    />
+                    <TextField
+                        floatingLabelText="Password*"
+                        required
+                        fullWidth
+                        type="password"
+                        onChange={(event, password) => this.passwordChange(password)}
+                    />
+                </Dialog>
+            </div>
         )
     }
 }
 
 const Authorize = connect(
-    mapDispatchToProps,
+    mapStateToProps,
+    mapDispatchToProps
 )(AuthorizeForm)
 
 export default Authorize;

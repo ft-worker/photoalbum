@@ -4,26 +4,20 @@ import { connect } from 'react-redux'
 import { receivePosts } from '../actions.js'
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import moment from 'moment/moment.js'
-import fetch from 'cross-fetch'
 import Header from '../components/Header'
+import appFetch from '../components/AppFetch'
 
 const mapStateToProps = (state, ownProps) => {
   return {
     posts: state.Posts
   }
 }
-
 const mapDispatchToProps = (dispatch) => {
   return {
     onReceivePosts: () => {
-      fetch('http://localhost:8081/api/allposts', {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      appFetch('posts')
         .then(response => response.json())
-        .then(posts => dispatch(receivePosts(posts)))
-
+        .then(posts => { let sorted = posts.sort((a, b) => (moment(b.date).diff(moment(a.date)))); return dispatch(receivePosts(sorted)) })
     }
   }
 }
@@ -53,7 +47,7 @@ export class PostsList extends Component {
     return false;
   }
 
-  sortByDate(event) {
+  sortByDate() {
     this.setState(prevState => {
       const postsCopy = prevState.posts.slice();
       const sorted = postsCopy.sort((a, b) => (moment(b.date).diff(moment(a.date))));
@@ -74,11 +68,11 @@ export class PostsList extends Component {
   }
 
   sortAlphabetically(a, b) {
-    const nameA = a.username.toUpperCase();
-    const nameB = b.username.toUpperCase();
-    if (nameA < nameB) {
+    const titleA = a.title.toUpperCase();
+    const titleB = b.title.toUpperCase();
+    if (titleA < titleB) {
       return -1;
-    } else if (nameA > nameB) {
+    } else if (titleA > titleB) {
       return 1;
     }
     return 0;
@@ -95,29 +89,56 @@ export class PostsList extends Component {
     return (
       <div>
         <Header />
-        <div style={{ height: 37, marginTop: 8, maxWidth: 500 }}>
+        <div
+          style={{
+            display: 'flex',
+            position: 'relative',
+            maxWidth: 700,
+            alignItems: 'stretch',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: 0
+          }}
+        >
           <RadioButtonGroup
             name="post"
             defaultSelected="date"
+            style={{
+              width: 700,
+              paddingTop: 10,
+              paddingBottom: 0,
+              marginBottom: 0
+            }}
           >
             <RadioButton
               value="date"
               label="Sort by date"
-              style={{ height: 37, maxWidth: '50%', float: 'left' }}
+              //labelStyle={{ alignSelf: 'center' }}
+              style={{ height: 37, maxWidth: '50%', float: 'left', maxFontSize: 15 }}
               onClick={this.sortByDate}
             />
             <RadioButton
               value="alphabet"
               label="Sort by alphabet"
-              style={{ height: 37, maxWidth: '50%' }}
+              //labelStyle={{ alignSelf: 'center' }}
+              style={{ height: 37, maxWidth: '50%', maxFontSize: 15 }}
               onClick={this.SortByAlphabet}
             />
           </RadioButtonGroup>
         </div>
-        <div style={{ clear: 'both' }}>
+        <div
+          style={{
+            clear: 'both',
+            position: 'relative',
+            maxWidth: 700,
+            alignItems: 'stretch',
+            marginTop: 0,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}>
           {
             this.state.posts.map((post) => (
-              <div key={post.id} style={{ margin: 1, marginTop: 5, maxWidth: 500 }}>
+              <div key={post.post_id} style={{ margin: 0, marginTop: 5, maxWidth: 700 }}>
                 <Post
                   post={post}
                   isMyPosts={false}

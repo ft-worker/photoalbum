@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-//import FlatButton from 'material-ui/FlatButton';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import moment from 'moment/moment.js';
+import React, { Component } from 'react'
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
+import moment from 'moment/moment.js'
 import PostActions from './PostActions'
 import DeletePost from './DeletePost'
-import { RaisedButton } from 'material-ui';
+import { RaisedButton } from 'material-ui'
+import Comments from './Comments'
 
 export default class Post extends Component {
     constructor(props) {
@@ -20,17 +19,13 @@ export default class Post extends Component {
     isDeleteOpen = () => (this.setState({ isDeleteOpen: true }))
     isDeleteClose = () => (this.setState({ isDeleteOpen: false }))
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ posts: nextProps.posts })
-    }
-
     render() {
-        const avatarurl = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
+        const avatarurl = 'https://vignette.wikia.nocookie.net/tumblr-survivor-athena/images/7/7a/Blank_Avatar.png/revision/latest?cb=20161204161729'
         return (
             <Card>
                 <CardHeader
-                    title={this.props.post.username}
-                    subtitle="Russia"
+                    title={this.props.post.name}
+                    subtitle={'Added ' + moment(this.props.post.updated).fromNow()}
                     avatar={avatarurl}
                 />
                 <CardMedia>
@@ -38,7 +33,7 @@ export default class Post extends Component {
                 </CardMedia>
                 {
                     this.props.isMyPosts ?
-                        <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
+                        <CardActions style={{ float: 'right', padding: 8, paddingTop: 10 }}>
                             <RaisedButton label="Edit" onClick={() => this.isOpen()} >
                                 <PostActions
                                     onEditPost={this.props.onEditPost}
@@ -57,36 +52,16 @@ export default class Post extends Component {
                                 />
                             </RaisedButton>
                         </CardActions> :
-                        <CardActions style={{ float: 'right', padding: 10, paddingTop: 15 }}>
-                            <RaisedButton label="Like" />
-                        </CardActions>
+                        null
                 }
                 <CardTitle
                     style={{ maxWidth: '50%', padding: 8, paddingLeft: 18 }}
                     title={this.props.post.title}
-                    subtitle={this.props.post.updated > this.props.post.date ?
-                        'Updated ' + moment(this.props.post.updated).fromNow() :
-                        'Uploaded ' + moment(this.props.post.date).fromNow()}
                 />
-                <CardText style={{ padding: 8, paddingLeft: 18 }}>
-                    {'Liked By:'}
+                <CardText style={{ maxWidth: 666, padding: 2, paddingLeft: 18, paddingRight: 16 }} >
+                    <div style={{ maxWidth: 666 }}> {this.props.post.description}</div>
                 </CardText>
-                <CardText style={{ maxWidth: 448, padding: 8, paddingLeft: 18 }} >
-                    <div style={{ width: 448 }}> {this.props.post.description}</div>
-                </CardText>
-                <TextField
-                    hintText="Add a comment"
-                    style={{ paddingLeft: 18, maxWidth: 445 }}
-                    multiLine
-                    fullWidth
-                />
-                <CardText actAsExpander style={{ maxWidth: 125, padding: 8, paddingLeft: 18 }}>
-                    Show all comments
-                </CardText>
-                <CardText expandable>
-                    <div style={{ fontWeight: 'bold', maxWidth: '50%', float: 'left' }}>{'Jakob'}</div>
-                    <div style={{ maxWidth: '50%' }}> &nbsp;  What a beauty!!!</div>
-                </CardText>
+                <Comments post={this.props.post} showComments={false} style={{ maxWidth: 700 }}/>
             </Card>
         )
     }
