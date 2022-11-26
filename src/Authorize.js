@@ -130,6 +130,9 @@ class AuthorizeForm extends Component {
                 }}
             />,
         ]
+
+        console.log('testing...')
+
         return (
             <div>
                 <Dialog
